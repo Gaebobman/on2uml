@@ -1,0 +1,50 @@
+@prefix : <http://example.org/vehicle#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+:Thing a owl:Class ; rdfs:label "사물" .
+
+:Vehicle a owl:Class ;
+    rdfs:label "차량" ;
+    rdfs:comment "사람이나 화물을 운송하는 기계다." ;
+    rdfs:subClassOf :Thing ;
+    dcterms:source <http://example.org/vehicle#source/core> .
+
+:Car a owl:Class ; rdfs:label "승용차" ; rdfs:subClassOf :Vehicle ; dcterms:source <http://example.org/vehicle#source/core> .
+:Truck a owl:Class ; rdfs:label "트럭" ; rdfs:subClassOf :Vehicle ; dcterms:source <http://example.org/vehicle#source/core> .
+:Bus a owl:Class ; rdfs:label "버스" ; rdfs:subClassOf :Vehicle ; dcterms:source <http://example.org/vehicle#source/core> .
+:Motorcycle a owl:Class ; rdfs:label "오토바이" ; rdfs:subClassOf :Vehicle ; dcterms:source <http://example.org/vehicle#source/core> .
+
+:Manufacturer a owl:Class ;
+    rdfs:label "제조사" ;
+    rdfs:comment "차량을 생산하는 조직이다." ;
+    rdfs:subClassOf :Thing ;
+    dcterms:source <http://example.org/vehicle#source/registry> .
+
+:EngineType a owl:Class ; rdfs:label "엔진 형식" ; rdfs:subClassOf :Thing .
+
+:manufacturedBy a owl:ObjectProperty ;
+    rdfs:label "제조사" ;
+    rdfs:domain :Vehicle ;
+    rdfs:range :Manufacturer .
+
+:hasEngineType a owl:ObjectProperty ;
+    rdfs:label "엔진형식" ;
+    rdfs:domain :Vehicle ;
+    rdfs:range :EngineType .
+
+:modelYear a owl:DatatypeProperty ;
+    rdfs:label "연식" ;
+    rdfs:domain :Vehicle ;
+    rdfs:range xsd:integer .
+
+:payload a owl:DatatypeProperty ;
+    rdfs:label "적재량" ;
+    rdfs:domain :Truck ;
+    rdfs:range xsd:decimal .
+
+:Diesel a owl:NamedIndividual, :EngineType ; rdfs:label "디젤" .
+:Electric a owl:NamedIndividual, :EngineType ; rdfs:label "전기" .

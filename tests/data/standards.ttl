@@ -1,0 +1,13 @@
+@prefix : <http://example.org/plant#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://purl.obolibrary.org/obo/BFO_0000040> a owl:Class ; rdfs:label "material entity"@en .
+<https://spec.industrialontologies.org/ontology/core/Core/PieceOfEquipment> a owl:Class ;
+    rdfs:label "piece of equipment"@en ;
+    rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000040> .
+<https://std.example.com/core#Vessel> a owl:Class ; rdfs:label "vessel"@en .
+
+:Pump a owl:Class ; rdfs:label "펌프" ;
+    rdfs:subClassOf <https://spec.industrialontologies.org/ontology/core/Core/PieceOfEquipment> .
+:Tank a owl:Class ; rdfs:label "탱크" ; rdfs:subClassOf <https://std.example.com/core#Vessel> .

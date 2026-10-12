@@ -1,0 +1,46 @@
+# --- Ontology data stays out of this repo ---------------------------------
+# Real ontologies, their configs and their renders belong in the repo that owns
+# the ontology. Only the synthetic examples and test fixtures are tracked.
+*.ttl
+*.owl
+*.rdf
+*.nt
+*.nq
+*.n3
+*.trig
+*.jsonld
+*.omn
+*.ofn
+!examples/*.ttl
+!tests/data/*.ttl
+
+# views.yaml / overlay files name real classes and paths
+*.yaml
+*.yml
+!examples/*.yaml
+!.github/**/*.yml
+!.github/**/*.yaml
+
+# Rendered output and per-class tracking files
+out/
+*.png
+*.svg
+*.puml
+!docs/*.png
+manifest.json
+index.md
+
+# --- Tooling ---------------------------------------------------------------
+*.jar
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+.env
+.DS_Store
+.idea/
+.vscode/
+.claude/

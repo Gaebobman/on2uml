@@ -1,0 +1,25 @@
+# uv run on2uml --config examples/views.yaml
+# Paths are relative to this file.
+ontology: vehicle.ttl
+output_dir: ../out
+format: png
+
+defaults:            # every view below starts from these
+  exclude: [Thing]
+  collapse: 3
+
+views:               # hand-picked diagrams for reports
+  - name: vehicle-overview
+    title: 차량 온톨로지 개요
+    names: label
+    notes: none
+    color_by: source
+  - name: truck
+    title: 트럭 (상위 클래스 숨김)
+    focus: Truck
+    exclude: [Thing, Vehicle]
+
+per_class:           # one detail diagram per class, with change tracking
+  classes: all
+  output_dir: ../out/classes
+  individuals: true

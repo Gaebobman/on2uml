@@ -1,0 +1,30 @@
+@prefix : <http://example.org/ax#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:Order a owl:Class ;
+    rdfs:subClassOf
+        [ a owl:Restriction ; owl:onProperty :hasLine ; owl:someValuesFrom :OrderLine ] ,
+        [ a owl:Restriction ; owl:onProperty :placedBy ; owl:allValuesFrom :Customer ] ,
+        [ a owl:Restriction ; owl:onProperty :shipTo ; owl:maxQualifiedCardinality "2"^^xsd:nonNegativeInteger ; owl:onClass :Address ] ,
+        [ a owl:Restriction ; owl:onProperty :status ; owl:hasValue "open" ] ,
+        [ a owl:Restriction ; owl:onProperty :total ; owl:someValuesFrom xsd:decimal ] ,
+        [ owl:complementOf :Customer ] .
+
+:PriorityOrder a owl:Class ;
+    owl:equivalentClass [ owl:intersectionOf ( :Order
+        [ a owl:Restriction ; owl:onProperty :hasLine ; owl:minQualifiedCardinality "5"^^xsd:nonNegativeInteger ; owl:onClass :OrderLine ] ) ] .
+
+:Customer a owl:Class .
+:Company a owl:Class .
+:Address a owl:Class .
+:OrderLine a owl:Class .
+:Client a owl:Class ; owl:equivalentClass :Customer .
+
+:hasLine a owl:ObjectProperty ; rdfs:domain :Order ; rdfs:range :OrderLine .
+:placedBy a owl:ObjectProperty .
+:shipTo a owl:ObjectProperty .
+:owner a owl:ObjectProperty ; rdfs:domain :Order ; rdfs:range [ owl:unionOf ( :Customer :Company ) ] .
+:status a owl:DatatypeProperty .
+:total a owl:DatatypeProperty .
