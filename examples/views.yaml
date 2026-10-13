@@ -1,14 +1,19 @@
 # uv run on2uml --config examples/views.yaml
-# Paths are relative to this file.
+# Paths are relative to this file. View keys are the CLI options with
+# dashes turned into underscores (--color-by -> color_by); see `on2uml --help`.
 ontology: vehicle.ttl
-output_dir: ../out
-format: png
+output_dir: out              # report views go here
+format: png                  # png | svg
+# lang: ko                   # preferred rdfs:label / rdfs:comment language
+# compare: old/vehicle.ttl   # colour changes against an older version
+# namespaces:                # extra standard ontologies, PREFIX: NAME
+#   https://std.example.com/: STD
 
-defaults:            # every view below starts from these
+defaults:                    # every view and per_class start from these
   exclude: [Thing]
   collapse: 3
 
-views:               # hand-picked diagrams for reports
+views:                       # hand-picked diagrams for reports; name -> file name
   - name: vehicle-overview
     title: 차량 온톨로지 개요
     names: label
@@ -18,8 +23,9 @@ views:               # hand-picked diagrams for reports
     title: 트럭 (상위 클래스 숨김)
     focus: Truck
     exclude: [Thing, Vehicle]
+    # overlay: notes.yaml    # report-only notes/colours/hidden classes
 
-per_class:           # one detail diagram per class, with change tracking
-  classes: all
-  output_dir: ../out/classes
+per_class:                   # one diagram per class, with change tracking
+  classes: all               # all | domain (skip BFO/IOF/...) | [Class, ...]
+  output_dir: out/classes
   individuals: true
