@@ -330,3 +330,11 @@ def test_config_rejects_bad_individuals(tmp_path):
     from on2uml.config import load_config
     with pytest.raises(ValueError, match="individuals"):
         load_config(cfg)
+
+
+def test_long_overlay_note_bold_per_line(model):
+    from on2uml.overlay import Overlay
+    ov = Overlay(notes={NS + "Vehicle": "아주 긴 설명 메모가 여러 줄로 접혀도 굵은 글씨 표시가 줄마다 닫혀야 한다"})
+    src = build(model, set(model.classes), Options(notes="none"), overlay=ov)
+    lines = [l.strip() for l in src.splitlines() if "<b>" in l and "기호" not in l]
+    assert len(lines) > 1 and all(l.startswith("<b>") and l.endswith("</b>") for l in lines)

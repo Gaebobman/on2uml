@@ -300,14 +300,14 @@ def build(model: Model, chosen: set[str], opts: Options, overlay: Overlay | None
     out.append("")
     for iri in sorted(visible, key=lambda i: model.classes[i].name):
         k = model.classes[iri]
-        texts = []
+        body = []
         if k.comment and (opts.notes == "all" or (opts.notes == "focus" and iri in opts.focus)):
-            texts.append(k.comment)
+            body += _wrap(k.comment, opts.note_width)
         if iri in overlay.notes:
-            texts.append(f"<b>{overlay.notes[iri]}</b>")
-        if texts:
+            # bold each wrapped line: creole <b> does not span lines
+            body += [f"<b>{line}</b>" for line in _wrap(overlay.notes[iri], opts.note_width)]
+        if body:
             used.add("note")
-            body = [line for t in texts for line in _wrap(t, opts.note_width)]
             out.append(f"note right of {alias(iri, k.name)}")
             out += [f"  {_q(line)}" for line in body]
             out.append("end note")
