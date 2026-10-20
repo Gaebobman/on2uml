@@ -55,6 +55,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     look.add_argument("--individuals", action="store_true", help="draw named individuals")
     look.add_argument("--individuals-focus", action="store_true",
                       help="draw only the named individuals of the --focus classes")
+    look.add_argument("--individuals-hide", action="append", default=[], metavar="CLASS",
+                      help="with --individuals(-focus): never draw individuals of this class "
+                           "(exact class, not its subclasses; wins over --focus); repeatable")
     look.add_argument("--color-by", choices=["none", "source"], default="none",
                       help="fill classes by dcterms:source")
     look.add_argument("--direction", choices=["tb", "lr"], default="tb")
@@ -144,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
             notes=args.notes,
             attributes=not args.no_attributes,
             individuals="focus" if args.individuals_focus else args.individuals,
+            individuals_hide=args.individuals_hide,
             inherited=not args.no_inherited,
             standards=not args.no_standards,
             color_by=args.color_by,

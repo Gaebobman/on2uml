@@ -28,4 +28,6 @@ views:                       # hand-picked diagrams for reports; name -> file na
 per_class:                   # one diagram per class, with change tracking
   classes: all               # all | domain (skip BFO/IOF/...) | [Class, ...]
   output_dir: out/classes
-  individuals: true
+  individuals: true           # true | false | focus (only the class's own individuals)
+  # individuals_hide: [EngineType]  # never draw individuals typed exactly as these classes;
+  #                                 # an individual left with no drawn type is dropped (wins over focus)

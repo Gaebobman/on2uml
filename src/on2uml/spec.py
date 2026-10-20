@@ -32,6 +32,7 @@ class ViewSpec:
     notes: str = "focus"
     attributes: bool = True
     individuals: bool | str = False  # true | false | focus
+    individuals_hide: list[str] = field(default_factory=list)  # classes whose individuals are never drawn
     inherited: bool = True
     standards: bool = True
     color_by: str = "none"
@@ -49,7 +50,7 @@ class ViewSpec:
         unknown = sorted(set(data) - known)
         if unknown:
             raise ValueError(f"{where}: unknown key(s) {', '.join(unknown)}; allowed: {', '.join(sorted(known))}")
-        for key in ("focus", "subtree", "exclude"):
+        for key in ("focus", "subtree", "exclude", "individuals_hide"):
             if isinstance(data.get(key), str):
                 data[key] = [data[key]]
         spec = cls(**data)
@@ -80,6 +81,9 @@ def build_source(spec: ViewSpec, model: Model, diff: Diff | None = None) -> tupl
         warnings += ow
 
     focus = {model.resolve(f) for f in spec.focus}
+    unknown = [r for r in spec.individuals_hide if model.resolve(r) not in model.classes]
+    if unknown:
+        raise ValueError(f"individuals_hide: unknown class: {', '.join(unknown)}")
     folded: dict[str, list[str]] = {}
     if spec.collapse is not None:
         keep = focus | (set(overlay.notes) | set(overlay.colors) if overlay else set())
@@ -90,6 +94,7 @@ def build_source(spec: ViewSpec, model: Model, diff: Diff | None = None) -> tupl
         notes=spec.notes,
         attributes=spec.attributes,
         individuals=spec.individuals,
+        individuals_hide={model.resolve(r) for r in spec.individuals_hide},
         inherited=spec.inherited,
         standards=spec.standards,
         color_by=spec.color_by,

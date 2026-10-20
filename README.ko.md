@@ -59,6 +59,8 @@ uv run on2uml --config <온톨로지-폴더>/views.yaml
 
 보고용 메모, 강조색, 숨길 클래스는 overlay YAML로 덧붙인다(`--overlay`). TTL은 바뀌지 않는다. 형식은 [`overlay.py`](src/on2uml/overlay.py) 상단에 있다.
 
+개체(named individual)는 `--individuals`(그린 클래스 전부) 또는 `--individuals-focus`(`--focus` 클래스만)로 그린다. `--individuals-hide CLASS`는 그 클래스(하위 클래스 제외)의 개체를 뺀다. 예: 수백 개의 `skos:Concept` 값. focus 클래스라도 뺀다. `views.yaml`에서는 `individuals: true | focus`, `individuals_hide: [Concept]`로 쓴다.
+
 ## 그림 읽기
 
 그림마다 범례가 붙는다. 범례에는 그 그림에 쓰인 기호만 나온다.

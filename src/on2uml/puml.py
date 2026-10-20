@@ -23,6 +23,7 @@ class Options:
     notes: str = "focus"  # none | focus | all
     attributes: bool = True
     individuals: bool | str = False  # False | True (every drawn class) | "focus" (focus classes only)
+    individuals_hide: set[str] = field(default_factory=set)  # never draw individuals of these exact classes
     inherited: bool = True  # replay ancestors' attributes/associations on focus classes
     standards: bool = True  # «BFO»/«IOF» stereotypes on classes from standard ontologies
     color_by: str = "none"  # none | source
@@ -288,7 +289,8 @@ def build(model: Model, chosen: set[str], opts: Options, overlay: Overlay | None
     if opts.individuals:
         out.append("")
         for ind in sorted(model.individuals.values(), key=lambda i: i.name):
-            types = [t for t in ind.types if t in (opts.focus if opts.individuals == "focus" else visible)]
+            pool = opts.focus if opts.individuals == "focus" else visible
+            types = [t for t in ind.types if t in pool and t not in opts.individuals_hide]
             if not types:
                 continue
             a = alias(ind.iri, ind.name, "I")

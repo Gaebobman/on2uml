@@ -8,6 +8,7 @@ views.yaml:
       format: png             # defaults to the top-level format
       depth: 1                # any view key; merged over `defaults`
       individuals: true       # or focus: only the individuals of the class itself
+      individuals_hide: [Concept]  # but never those of these classes (wins over focus)
 
 Each run writes, per class, <Name>.puml and <Name>.<format>, plus:
   manifest.json  class -> sha256 of its .puml (no timestamps, so it diffs cleanly in git)

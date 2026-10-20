@@ -351,3 +351,32 @@ def test_plantuml_runs_headless(monkeypatch):
     assert render._env()["JAVA_TOOL_OPTIONS"] == "-Xmx2g -Djava.awt.headless=true"
     monkeypatch.setenv("JAVA_TOOL_OPTIONS", "-Djava.awt.headless=false")
     assert render._env()["JAVA_TOOL_OPTIONS"] == "-Djava.awt.headless=false"
+
+
+def test_individuals_hide(model):
+    from on2uml.model import Individual
+    model.individuals[NS + "Hyundai"] = Individual(NS + "Hyundai", "Hyundai", None, [NS + "Manufacturer"])
+    hide = {NS + "EngineType"}
+    # true + hide: every drawn class's individuals except the hidden class's
+    src = build(model, set(model.classes), Options(individuals=True, individuals_hide=hide))
+    assert "I_Hyundai ..> C_Manufacturer" in src and "I_Diesel" not in src
+    # focus + hide: hide wins even for a focus class
+    src = build(model, set(model.classes), Options(focus={NS + "EngineType"}, individuals="focus", individuals_hide=hide))
+    assert "I_Diesel" not in src and "I_Hyundai" not in src
+    # default: nothing hidden
+    src = build(model, set(model.classes), Options(individuals=True))
+    assert "I_Diesel ..> C_EngineType" in src and "I_Hyundai" in src
+
+
+def test_individuals_hide_config_and_cli(tmp_path):
+    from on2uml.spec import ViewSpec, build_source
+    model = load(EXAMPLE)
+    spec = ViewSpec.from_dict({"output": "x.puml", "individuals": True, "individuals_hide": "엔진 형식"}, "t")
+    assert spec.individuals_hide == ["엔진 형식"]
+    src, _, _ = build_source(spec, model)
+    assert "I_Diesel" not in src
+    with pytest.raises(ValueError, match="individuals_hide"):
+        build_source(ViewSpec(output="x.puml", individuals=True, individuals_hide=["Nope"]), model)
+    out = tmp_path / "v.puml"
+    assert main([str(EXAMPLE), "-o", str(out), "--individuals", "--individuals-hide", "EngineType"]) == 0
+    assert "I_Diesel" not in out.read_text(encoding="utf-8")

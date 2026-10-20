@@ -59,6 +59,8 @@ Changes are counted per image. Editing a superclass also changes the subclass di
 
 Report-only notes, highlight colours and hidden classes go in an overlay YAML (`--overlay`). The TTL is not changed. The format is at the top of [`overlay.py`](src/on2uml/overlay.py).
 
+Named individuals are drawn with `--individuals` (every drawn class) or `--individuals-focus` (the `--focus` classes only). `--individuals-hide CLASS` leaves out the individuals of that exact class, e.g. hundreds of `skos:Concept` values, and wins over focus. In `views.yaml`: `individuals: true | focus` and `individuals_hide: [Concept]`.
+
 ## Reading the diagrams
 
 Each diagram has a legend. The legend lists only the notation that diagram uses.
