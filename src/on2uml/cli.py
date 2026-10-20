@@ -53,6 +53,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     look.add_argument("--namespace", action="append", default=[], metavar="PREFIX=NAME",
                       help="treat IRIs starting with PREFIX as standard ontology NAME; repeatable")
     look.add_argument("--individuals", action="store_true", help="draw named individuals")
+    look.add_argument("--individuals-focus", action="store_true",
+                      help="draw only the named individuals of the --focus classes")
     look.add_argument("--color-by", choices=["none", "source"], default="none",
                       help="fill classes by dcterms:source")
     look.add_argument("--direction", choices=["tb", "lr"], default="tb")
@@ -141,7 +143,7 @@ def main(argv: list[str] | None = None) -> int:
             names=args.names,
             notes=args.notes,
             attributes=not args.no_attributes,
-            individuals=args.individuals,
+            individuals="focus" if args.individuals_focus else args.individuals,
             inherited=not args.no_inherited,
             standards=not args.no_standards,
             color_by=args.color_by,

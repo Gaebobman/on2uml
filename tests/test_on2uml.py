@@ -92,6 +92,14 @@ def test_build_puml(model):
     assert "I_Diesel ..> C_EngineType" in src
 
 
+def test_individuals_focus_only(model):
+    # "focus" keeps a neighbour class's individuals out of the diagram
+    src = build(model, set(model.classes), Options(focus={NS + "Vehicle"}, individuals="focus"))
+    assert "I_Diesel" not in src and "C_Vehicle --> C_EngineType" in src
+    src = build(model, set(model.classes), Options(focus={NS + "EngineType"}, individuals="focus"))
+    assert "I_Diesel ..> C_EngineType" in src
+
+
 # --- inherited associations / attributes -------------------------------------
 
 def test_focus_reaches_inherited_association_ends(model):
@@ -314,3 +322,11 @@ def test_legend_lists_only_drawn_notation(model, axioms):
 
     off = build(model, select(model, focus=["Truck"]), Options(focus={NS + "Truck"}, legend=False))
     assert "endlegend" not in off
+
+
+def test_config_rejects_bad_individuals(tmp_path):
+    cfg = tmp_path / "views.yaml"
+    cfg.write_text(f"ontology: {EXAMPLE}\nviews:\n  - name: a\n    individuals: some\n", encoding="utf-8")
+    from on2uml.config import load_config
+    with pytest.raises(ValueError, match="individuals"):
+        load_config(cfg)

@@ -31,7 +31,7 @@ class ViewSpec:
     names: str = "both"
     notes: str = "focus"
     attributes: bool = True
-    individuals: bool = False
+    individuals: bool | str = False  # true | false | focus
     inherited: bool = True
     standards: bool = True
     color_by: str = "none"
@@ -56,6 +56,8 @@ class ViewSpec:
         for key, allowed in CHOICES.items():
             if getattr(spec, key) not in allowed:
                 raise ValueError(f"{where}: {key} must be one of {', '.join(allowed)}")
+        if spec.individuals not in (True, False, "focus"):
+            raise ValueError(f"{where}: individuals must be true, false or focus")
         return spec
 
 

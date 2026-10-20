@@ -7,7 +7,7 @@ views.yaml:
       output_dir: out/classes
       format: png             # defaults to the top-level format
       depth: 1                # any view key; merged over `defaults`
-      individuals: true
+      individuals: true       # or focus: only the individuals of the class itself
 
 Each run writes, per class, <Name>.puml and <Name>.<format>, plus:
   manifest.json  class -> sha256 of its .puml (no timestamps, so it diffs cleanly in git)
