@@ -338,3 +338,16 @@ def test_long_overlay_note_bold_per_line(model):
     src = build(model, set(model.classes), Options(notes="none"), overlay=ov)
     lines = [l.strip() for l in src.splitlines() if "<b>" in l and "기호" not in l]
     assert len(lines) > 1 and all(l.startswith("<b>") and l.endswith("</b>") for l in lines)
+
+
+def test_plantuml_runs_headless(monkeypatch):
+    from on2uml import render
+
+    monkeypatch.setenv("PLANTUML_JAR", "/x/plantuml.jar")
+    assert "-Djava.awt.headless=true" in render._command(None)
+    monkeypatch.delenv("JAVA_TOOL_OPTIONS", raising=False)
+    assert render._env()["JAVA_TOOL_OPTIONS"] == "-Djava.awt.headless=true"
+    monkeypatch.setenv("JAVA_TOOL_OPTIONS", "-Xmx2g")
+    assert render._env()["JAVA_TOOL_OPTIONS"] == "-Xmx2g -Djava.awt.headless=true"
+    monkeypatch.setenv("JAVA_TOOL_OPTIONS", "-Djava.awt.headless=false")
+    assert render._env()["JAVA_TOOL_OPTIONS"] == "-Djava.awt.headless=false"
